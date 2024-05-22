@@ -1,0 +1,47 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="simple_AR_game"
+run/main_scene="res://main.tscn"
+config/features=PackedStringArray("4.2", "Mobile")
+config/icon="res://icon.svg"
+
+[autoload]
+
+XRToolsUserSettings="*res://addons/godot-xr-tools/user_settings/user_settings.gd"
+
+[display]
+
+window/size/transparent=true
+window/per_pixel_transparency/allowed=true
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godot-xr-tools/plugin.cfg")
+
+[layer_names]
+
+3d_physics/layer_3="Pickable"
+
+[rendering]
+
+renderer/rendering_method="mobile"
+textures/vram_compression/import_s3tc_bptc=true
+textures/vram_compression/import_etc2_astc=true
+environment/defaults/default_clear_color=Color(0.301961, 0.301961, 0.301961, 0)
+
+[xr]
+
+openxr/enabled=true
+openxr/environment_blend_mode=2
+openxr/extensions/eye_gaze_interaction=true
+shaders/enabled=true

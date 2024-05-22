@@ -1,0 +1,86 @@
+[gd_scene load_steps=12 format=3 uid="uid://dwa68xp3eow7n"]
+
+[ext_resource type="PackedScene" uid="uid://bx1xdisoqo1f6" path="res://addons/godot-xr-tools/hands/scenes/lowpoly/left_tac_glove_low.tscn" id="1_8mfm1"]
+[ext_resource type="PackedScene" uid="uid://b4ysuy43poobf" path="res://addons/godot-xr-tools/functions/function_pickup.tscn" id="2_51l0w"]
+[ext_resource type="PackedScene" uid="uid://chumpejwiub7f" path="res://addons/godot-xr-tools/hands/scenes/lowpoly/right_tac_glove_low.tscn" id="2_qgx37"]
+[ext_resource type="Script" path="res://addons/godot-xr-tools/objects/pickable.gd" id="3_rey5w"]
+[ext_resource type="PackedScene" uid="uid://da2qgxxwwitl6" path="res://addons/godot-xr-tools/objects/highlight/highlight_ring.tscn" id="5_qwwe7"]
+[ext_resource type="Script" path="res://addons/godot-xr-tools/xr/start_xr.gd" id="6_2w3xb"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_xlv0a"]
+height = 0.1
+radius = 10.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_twffm"]
+radius = 0.1
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ve134"]
+transparency = 1
+albedo_color = Color(0.517647, 0.513726, 0, 0.698039)
+roughness = 0.4
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_t8gq2"]
+radius = 0.1
+
+[sub_resource type="Environment" id="Environment_bm6hw"]
+background_mode = 1
+background_color = Color(0, 0, 0, 0)
+
+[node name="main" type="Node3D"]
+
+[node name="XROrigin3D" type="XROrigin3D" parent="."]
+
+[node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 0)
+
+[node name="left_hand" type="XRController3D" parent="XROrigin3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 1, 0)
+tracker = &"left_hand"
+pose = &"aim"
+
+[node name="LeftHand" parent="XROrigin3D/left_hand" instance=ExtResource("1_8mfm1")]
+
+[node name="FunctionPickup" parent="XROrigin3D/left_hand" instance=ExtResource("2_51l0w")]
+
+[node name="right_hand" type="XRController3D" parent="XROrigin3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1, 0)
+tracker = &"right_hand"
+pose = &"aim"
+
+[node name="RightHand" parent="XROrigin3D/right_hand" instance=ExtResource("2_qgx37")]
+
+[node name="FunctionPickup" parent="XROrigin3D/right_hand" instance=ExtResource("2_51l0w")]
+
+[node name="surface" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.927535, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="surface"]
+shape = SubResource("CylinderShape3D_xlv0a")
+
+[node name="ball" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.51118, -1.04913)
+collision_layer = 4
+collision_mask = 5
+script = ExtResource("3_rey5w")
+picked_up_layer = 65540
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="ball"]
+mesh = SubResource("SphereMesh_twffm")
+surface_material_override/0 = SubResource("StandardMaterial3D_ve134")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ball"]
+shape = SubResource("SphereShape3D_t8gq2")
+
+[node name="HighlightRing" parent="ball" instance=ExtResource("5_qwwe7")]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 7.2, 0)
+light_energy = 5.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_bm6hw")
+
+[node name="XRToolsStartXR" type="Node" parent="."]
+script = ExtResource("6_2w3xb")
+enable_passthrough = true
